@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+
 namespace OpenLobby.Utility.Utils
 {
     /// <summary>
@@ -7,14 +8,22 @@ namespace OpenLobby.Utility.Utils
     /// </summary>
     public class ByteString
     {
-        public const int HEADERSIZE = 1; // 1B length
+        /// <summary>
+        /// 1B
+        /// </summary>
+        public const int HEADERSIZE = 1;
+
+        /// <summary>
+        /// The string in the stream;
+        /// </summary>
         public string Value { get => Encoding.ASCII.GetString(Body); set => Encoding.ASCII.GetBytes(value, Body.AsSpan()); }
+      
         /// <summary>
         /// The length of the stream
         /// </summary>
         public byte StreamLength { get => Stream[0]; private set => Stream[0] = value; }
 
-        public readonly ArraySegment<byte> Stream;
+        private readonly ArraySegment<byte> Stream;
         private readonly ArraySegment<byte> Body;
 
         /// <summary>

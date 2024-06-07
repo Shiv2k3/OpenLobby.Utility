@@ -13,8 +13,9 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("OpenLobby.Utility")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("Library for communicating with an OpenLobby server.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fb04f6046393b56daa4b34367c590fcace38d80")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f42cd9bc7426cbd3005a9c132f8d153890c46156")]
 [assembly: System.Reflection.AssemblyProductAttribute("OpenLobby.Utility")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OpenLobby.Utility")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -7,8 +7,31 @@ namespace OpenLobby.Utility.Utils
     /// </summary>
     public class ByteMember
     {
-        public byte Value { get; }
-        public ByteMember(in ArraySegment<byte> body, int index, byte value) => Value = body[index] = value;
-        public ByteMember(in ArraySegment<byte> body, int index) => Value = body[index];
+        /// <summary>
+        /// Get the byte value
+        /// </summary>
+        public byte Value { get => value; }
+        
+        /// <summary>
+        /// True if byte is greater than 0
+        /// </summary>
+        public bool AsBool { get => value > 0; }
+
+        private readonly byte value;
+
+        /// <summary>
+        /// Constructs from the body at index set to value
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public ByteMember(in ArraySegment<byte> body, int index, byte value) => this.value = (body[index] = value);
+        
+        /// <summary>
+        /// Constructs using the byte at index
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="index"></param>
+        public ByteMember(in ArraySegment<byte> body, int index) => value = body[index];
     }
 }

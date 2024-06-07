@@ -2,10 +2,13 @@
 
 namespace OpenLobby.Utility.Utils
 {
+    /// <summary>
+    /// Helper functions
+    /// </summary>
     public static class Helper
     {
         /// <summary>
-        /// Sets the bytes from ushort into arr at index i1 & i2
+        /// Sets the bytes from ushort into arr at index i1 and i2
         /// </summary>
         public static void SetUshort(ushort value, int i1, int i2, ArraySegment<byte> arr)
         {
@@ -14,7 +17,7 @@ namespace OpenLobby.Utility.Utils
         }
 
         /// <summary>
-        /// Gets ushort from arr by using bytes at index i1 & i2
+        /// Gets ushort from arr by using bytes at index i1 and i2
         /// </summary>
         /// <returns></returns>
         public static ushort GetUshort(int i1, int i2, ArraySegment<byte> arr)

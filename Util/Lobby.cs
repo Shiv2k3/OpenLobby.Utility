@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using OpenLobby.Utility.Network;
-namespace OpenLobby.Utility.Util
+using System.Collections.Generic;
+
+namespace OpenLobby.Utility.Utils
 {
     /// <summary>
     /// Repersents a Lobby
@@ -51,6 +52,10 @@ namespace OpenLobby.Utility.Util
             MaxClients = maxClients;
         }
 
+        /// <summary>
+        /// Gets the name
+        /// </summary>
+        /// <returns>A formatted string with the ID + Name + Host</returns>
         public override string ToString()
         {
             return ID + " Name: " + Name + " @" + Host.ToString();

@@ -1,9 +1,12 @@
 C:\Users\Shiv\source\repos\OpenLobby.Utility\bin\Debug\netstandard2.1\OpenLobby.Utility.deps.json
 C:\Users\Shiv\source\repos\OpenLobby.Utility\bin\Debug\netstandard2.1\OpenLobby.Utility.dll
-C:\Users\Shiv\source\repos\OpenLobby.Utility\bin\Debug\netstandard2.1\OpenLobby.Utility.pdb
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.AssemblyInfoInputs.cache
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.AssemblyInfo.cs
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.csproj.CoreCompileInputs.cache
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.dll
-C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.pdb
+C:\Users\Shiv\source\repos\OpenLobby.Utility\bin\Debug\netstandard2.1\OpenLobby.Utility.xml
+C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\refint\OpenLobby.Utility.dll
+C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.xml
+C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\ref\OpenLobby.Utility.dll
+C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.sourcelink.json

@@ -1,39 +1,24 @@
 ﻿using OpenLobby.Utility.Utils;
 using System;
-using System.Collections.Generic;
+
 namespace OpenLobby.Utility.Transmissions
 {
     /// <summary>
     /// Repersents a base header-only transmission without any data transmission, inherieting classes should simply wrap over Data
     /// </summary>
-    public class Transmission
+    public partial class Transmission
     {
-        public enum Types
+        /// <summary>
+        /// Transmission types
+        /// </summary>
+        public enum TransmisisonType
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         {
             HostRequest,
             Reply,
             LobbyQuery,
         }
-
-        /// <summary>
-        /// Map of index to Transmission type
-        /// </summary>
-        public static readonly Dictionary<ushort, Type> IndexTransmission = new Dictionary<ushort, Type>()
-        {
-            {0, typeof(HostRequest) },
-            {1, typeof(Reply) },
-            {2, typeof(LobbyQuery) }
-        };
-
-        /// <summary>
-        /// Map of Transmission type to index
-        /// </summary>
-        public static readonly Dictionary<Type, ushort> TransmissionIndex = new Dictionary<Type, ushort>()
-        {
-            {IndexTransmission[0], 0 },
-            {IndexTransmission[1], 1 },
-            {IndexTransmission[2], 2 },
-        };
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// The number of header bytes, 2b TypeID + 2b Length
@@ -63,7 +48,7 @@ namespace OpenLobby.Utility.Transmissions
         /// <summary>
         /// Same as TypeID but returns Types enum
         /// </summary>
-        public Types Type => (Types)TypeID;
+        public TransmisisonType Type => (TransmisisonType)TypeID;
 
         /// <summary>
         /// The number of bytes of data
@@ -73,13 +58,14 @@ namespace OpenLobby.Utility.Transmissions
         /// <summary>
         /// Create base class members
         /// </summary>
+        /// <param name="type">The type of the derived class</param>
         /// <param name="dataLength">Length of data</param>
-        protected Transmission(Type transmissionType, ushort dataLength)
+        protected Transmission(ushort type, ushort dataLength)
         {
             Stream = new byte[dataLength + HEADERSIZE];
             Body = new ArraySegment<byte>(Stream, HEADERSIZE, dataLength);
 
-            TypeID = (ushort)TransmissionIndex[transmissionType];
+            TypeID = type;
             Length = dataLength;
         }
 
@@ -96,7 +82,7 @@ namespace OpenLobby.Utility.Transmissions
         /// <summary>
         /// Use payload header to create instance for payload intel
         /// </summary>
-        /// <param name="payload"></param>
+        /// <param name="header"></param>
         public Transmission(byte[] header)
         {
             Stream = header;

@@ -1,6 +1,10 @@
 ﻿using OpenLobby.Utility.Utils;
+
 namespace OpenLobby.Utility.Transmissions
 {
+    /// <summary>
+    /// Repersents a request to query for lobbies
+    /// </summary>
     public class LobbyQuery : Transmission
     {
         /// <summary>
@@ -17,11 +21,16 @@ namespace OpenLobby.Utility.Transmissions
         /// Creates query, client-side
         /// </summary>
         /// <param name="search">Lobby name</param>
-        public LobbyQuery(string search) : base(typeof(LobbyQuery), (ushort)StringArray.GetHeaderSize(search))
+        public LobbyQuery(string search) : base(2, (ushort)StringArray.GetHeaderSize(search))
         {
             Search = new ByteString(search, Body, 0);
         }
-        public LobbyQuery(params string[] lobbies) : base(typeof(LobbyQuery), (ushort)StringArray.GetHeaderSize(lobbies))
+
+        /// <summary>
+        /// Construct using lobbies
+        /// </summary>
+        /// <param name="lobbies"></param>
+        public LobbyQuery(params string[] lobbies) : base(2, (ushort)StringArray.GetHeaderSize(lobbies))
         {
             Lobbies = new StringArray(Body, 0, lobbies);
         }

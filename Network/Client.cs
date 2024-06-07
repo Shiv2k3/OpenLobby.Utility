@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenLobby.Utility.Transmissions;
+
 namespace OpenLobby.Utility.Network
 {
+    /// <summary>
+    /// Repersents a network client
+    /// </summary>
     public class Client
     {
         private readonly Socket Socket;
@@ -15,6 +18,10 @@ namespace OpenLobby.Utility.Network
         /// True when new transmission is available
         /// </summary>
         public bool Available => Socket.Available >= Transmission.HEADERSIZE;
+
+        /// <summary>
+        /// The remote endpoint, null if it listening
+        /// </summary>
         public IPEndPoint? RemoteEndpoint => Socket.RemoteEndPoint as IPEndPoint;
 
         /// <summary>
@@ -42,6 +49,9 @@ namespace OpenLobby.Utility.Network
             Socket = socket;
         }
 
+        /// <summary>
+        /// Closes the socket
+        /// </summary>
         ~Client()
         {
             Socket.Close();
@@ -122,6 +132,7 @@ namespace OpenLobby.Utility.Network
             return new Client(remote);
         }
 
+        /// <returns>Remode endpoint as a string</returns>
         public override string? ToString()
         {
             return Socket.RemoteEndPoint?.ToString();

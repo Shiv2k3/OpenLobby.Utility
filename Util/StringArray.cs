@@ -1,6 +1,6 @@
-﻿using OpenLobby.Utility.Utils;
-using System;
-namespace OpenLobby.Utility.Transmissions
+﻿using System;
+
+namespace OpenLobby.Utility.Utils  
 {
     /// <summary>
     /// An array of ByteStrings
@@ -19,6 +19,42 @@ namespace OpenLobby.Utility.Transmissions
         /// </summary>
         public ByteMember Count { get; private set; }
 
+        /// <summary>
+        /// Index the internal byte stream
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        public ByteString this[int index]
+        {
+            get
+            {
+                if (index >= Stream[0])
+                    throw new IndexOutOfRangeException();
+
+                int stringIndex = 0;
+                for (int i = 0; i < index; i++)
+                {
+                    stringIndex += Lengths[i];
+                }
+                return new ByteString(Body, stringIndex);
+            }
+            private set
+            {
+                if (index >= Stream[0])
+                    throw new IndexOutOfRangeException();
+
+                Lengths[index] = value.StreamLength;
+            }
+        }
+
+        /// <summary>
+        /// Constructs the string array into the array segment from the start index
+        /// </summary>
+        /// <param name="body">The array segment the strings are stored in</param>
+        /// <param name="start">The starting index of the stream</param>
+        /// <param name="strings">The strings to place in the array segment</param>
+        /// <exception cref="ArgumentException">The given string was too long</exception>
         public StringArray(in ArraySegment<byte> body, int start, params string[] strings)
         {
             if (strings.Length > byte.MaxValue)
@@ -43,6 +79,12 @@ namespace OpenLobby.Utility.Transmissions
                 start += s.StreamLength;
             }
         }
+
+        /// <summary>
+        /// Reconstructs using the array segment and starting index
+        /// </summary>
+        /// <param name="body">The array segment with the strings</param>
+        /// <param name="start">The starting index of the stream</param>
         public StringArray(in ArraySegment<byte> body, int start)
         {
             int c = body[start];
@@ -64,29 +106,11 @@ namespace OpenLobby.Utility.Transmissions
             Body = body.Slice(bodyStart, bodyLength);
         }
 
-        public ByteString this[int index]
-        {
-            get
-            {
-                if (index >= Stream[0])
-                    throw new IndexOutOfRangeException();
-
-                int stringIndex = 0;
-                for (int i = 0; i < index; i++)
-                {
-                    stringIndex += Lengths[i];
-                }
-                return new ByteString(Body, stringIndex);
-            }
-            private set
-            {
-                if (index >= Stream[0])
-                    throw new IndexOutOfRangeException();
-
-                Lengths[index] = value.StreamLength;
-            }
-        }
-
+        /// <summary>
+        /// Gets the StringArray header that encodes an array of strings
+        /// </summary>
+        /// <param name="strings">The strings that will be encoded</param>
+        /// <returns>The header length</returns>
         public static int GetHeaderSize(params string[] strings) => 1 + strings.Length + Helper.GetByteStringLength(strings);
     }
 }

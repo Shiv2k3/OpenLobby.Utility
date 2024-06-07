@@ -8,19 +8,34 @@ namespace OpenLobby.Utility.Transmissions
     /// </summary>
     public class HostRequest : Transmission
     {
+        /// <summary>
+        /// Maximum number of clients
+        /// </summary>
         public ByteMember MaxClients;
+
+        /// <summary>
+        /// Is the lobby public
+        /// </summary>
         public ByteMember Visible;
+
+        /// <summary>
+        /// Lobby name
+        /// </summary>
         public ByteString Name;
+
+        /// <summary>
+        /// Lobby password
+        /// </summary>
         public ByteString Password;
 
         /// <summary>
-        /// Creates a transmission for requesting to host (Client-Side)
+        /// Constructs a Host Request transmission
         /// </summary>
-        /// <param name="name">The lobby name, 5 <= Length <= 16</param>
-        /// <param name="password">The lobby password used to authenticate clients, 5 < Length < 16</param>
+        /// <param name="name">The lobby name</param>
+        /// <param name="password">The lobby password used to authenticate clients</param> 
         /// <param name="publicVisible">Is the lobby publicly searchable</param>
         /// <param name="maxClients">Max number of playe, must be greater than 1</param>
-        public HostRequest(string name, string password, bool publicVisible, byte maxClients) : base(typeof(HostRequest), (ushort)(HEADERSIZE + Helper.GetByteStringLength(name, password)))
+        public HostRequest(string name, string password, bool publicVisible, byte maxClients) : base(0, (ushort)(HEADERSIZE + Helper.GetByteStringLength(name, password)))
         {
             TestInput(name, password, maxClients);
 
@@ -30,6 +45,9 @@ namespace OpenLobby.Utility.Transmissions
             Password = new ByteString(password, Body, 2 + Name.StreamLength);
         }
 
+        /// <summary>
+        /// Reconstructs the Host Request using a transmission
+        /// </summary>
         public HostRequest(Transmission trms) : base(trms)
         {
             MaxClients = new ByteMember(Body, 0);

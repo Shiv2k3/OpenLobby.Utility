@@ -1,90 +1,92 @@
 ﻿using OpenLobby.Utility.Utils;
-namespace OpenLobby.Utility.Transmissions;
-
-/// <summary>
-/// An array of ByteStrings
-/// </summary>
-public class StringArray
+using System;
+namespace OpenLobby.Utility.Transmissions
 {
-    // first byte # of strings, C, followed by C many bytes stating offset to the start of the next string
-    // max C is 255
-    // max string length is 255
-    private readonly ArraySegment<byte> Stream;
-    private readonly ArraySegment<byte> Lengths;
-    private readonly ArraySegment<byte> Body;
-
     /// <summary>
-    /// Total number of strings
+    /// An array of ByteStrings
     /// </summary>
-    public ByteMember Count { get; private set; }
-
-    public StringArray(in ArraySegment<byte> body, int start, params string[] strings)
+    public class StringArray
     {
-        if (strings.Length > byte.MaxValue)
-            throw new ArgumentException("Strings array was too long");
+        // first byte # of strings, C, followed by C many bytes stating offset to the start of the next string
+        // max C is 255
+        // max string length is 255
+        private readonly ArraySegment<byte> Stream;
+        private readonly ArraySegment<byte> Lengths;
+        private readonly ArraySegment<byte> Body;
 
-        int c = strings.Length;
-        int bodyLength = Helper.GetByteStringLength(strings);
-        int header = 1;
-        int length = header + c + bodyLength;
+        /// <summary>
+        /// Total number of strings
+        /// </summary>
+        public ByteMember Count { get; private set; }
 
-        Stream = body.Slice(start, length);
-        Count = new(body, 0, (byte)c);
-
-        Lengths = Stream.Slice(header, c);
-        Body = Stream.Slice(c + header, bodyLength);
-
-        start = 0;
-        for (int i = 0; i < strings.Length; i++)
+        public StringArray(in ArraySegment<byte> body, int start, params string[] strings)
         {
-            var s = new ByteString(strings[i], Body, start);
-            this[i] = s;
-            start += s.StreamLength;
-        }
-    }
-    public StringArray(in ArraySegment<byte> body, int start)
-    {
-        int c = body[start];
-        int header = 1;
+            if (strings.Length > byte.MaxValue)
+                throw new ArgumentException("Strings array was too long");
 
-        int indicesStart = start + header;
-        int bodyStart = indicesStart + c;
-        Lengths = body.Slice(indicesStart, c);
+            int c = strings.Length;
+            int bodyLength = Helper.GetByteStringLength(strings);
+            int header = 1;
+            int length = header + c + bodyLength;
 
-        int bodyLength = 0;
-        for (int i = 0; i < c; i++)
-        {
-            bodyLength += Lengths[i];
-        }
-        int length = header + c + bodyLength;
+            Stream = body.Slice(start, length);
+            Count = new ByteMember(body, 0, (byte)c);
 
-        Stream = body.Slice(start, length);
-        Count = new(Stream, 0, (byte)c);
-        Body = body.Slice(bodyStart, bodyLength);
-    }
+            Lengths = Stream.Slice(header, c);
+            Body = Stream.Slice(c + header, bodyLength);
 
-    public ByteString this[int index]
-    {
-        get
-        {
-            if (index >= Stream[0])
-                throw new IndexOutOfRangeException();
-
-            int stringIndex = 0;
-            for (int i = 0; i < index; i++)
+            start = 0;
+            for (int i = 0; i < strings.Length; i++)
             {
-                stringIndex += Lengths[i];
+                var s = new ByteString(strings[i], Body, start);
+                this[i] = s;
+                start += s.StreamLength;
             }
-            return new(Body, stringIndex);
         }
-        private set
+        public StringArray(in ArraySegment<byte> body, int start)
         {
-            if (index >= Stream[0])
-                throw new IndexOutOfRangeException();
+            int c = body[start];
+            int header = 1;
 
-            Lengths[index] = value.StreamLength;
+            int indicesStart = start + header;
+            int bodyStart = indicesStart + c;
+            Lengths = body.Slice(indicesStart, c);
+
+            int bodyLength = 0;
+            for (int i = 0; i < c; i++)
+            {
+                bodyLength += Lengths[i];
+            }
+            int length = header + c + bodyLength;
+
+            Stream = body.Slice(start, length);
+            Count = new ByteMember(Stream, 0, (byte)c);
+            Body = body.Slice(bodyStart, bodyLength);
         }
-    }
 
-    public static int GetHeaderSize(params string[] strings) => 1 + strings.Length + Helper.GetByteStringLength(strings);
+        public ByteString this[int index]
+        {
+            get
+            {
+                if (index >= Stream[0])
+                    throw new IndexOutOfRangeException();
+
+                int stringIndex = 0;
+                for (int i = 0; i < index; i++)
+                {
+                    stringIndex += Lengths[i];
+                }
+                return new ByteString(Body, stringIndex);
+            }
+            private set
+            {
+                if (index >= Stream[0])
+                    throw new IndexOutOfRangeException();
+
+                Lengths[index] = value.StreamLength;
+            }
+        }
+
+        public static int GetHeaderSize(params string[] strings) => 1 + strings.Length + Helper.GetByteStringLength(strings);
+    }
 }

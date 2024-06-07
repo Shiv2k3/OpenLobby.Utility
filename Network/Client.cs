@@ -1,126 +1,130 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using OpenLobby.Utility.Transmissions;
-namespace OpenLobby.Utility.Network;
-
-public class Client
+namespace OpenLobby.Utility.Network
 {
-    private readonly Socket Socket;
-    private Transmission? StalledTransmission;
-
-    /// <summary>
-    /// True when new transmission is available
-    /// </summary>
-    public bool Available => Socket.Available >= Transmission.HEADERSIZE;
-    public IPEndPoint? RemoteEndpoint => Socket.RemoteEndPoint as IPEndPoint;
-
-    /// <summary>
-    /// Create a listening socket
-    /// </summary>
-    /// <param name="port">The port to listen on</param>
-    public Client(int port)
+    public class Client
     {
-        IPEndPoint lep = new(IPAddress.Any, port);
-        Socket = new(SocketType.Stream, ProtocolType.Tcp);
-        Socket.Bind(lep);
-        Socket.Listen();
-    }
+        private readonly Socket Socket;
+        private Transmission? StalledTransmission;
 
-    /// <summary>
-    /// Creates a client using a remote socket
-    /// </summary>
-    /// <param name="socket">The remote socket to use</param>
-    /// <exception cref="ArgumentException">The given socket was not remote</exception>
-    public Client(Socket socket)
-    {
-        if (socket.RemoteEndPoint is null)
-            throw new ArgumentException("Socket was not remote");
+        /// <summary>
+        /// True when new transmission is available
+        /// </summary>
+        public bool Available => Socket.Available >= Transmission.HEADERSIZE;
+        public IPEndPoint? RemoteEndpoint => Socket.RemoteEndPoint as IPEndPoint;
 
-        Socket = socket;
-    }
-
-    ~Client()
-    {
-        Socket.Close();
-    }
-
-    /// <summary>
-    /// Tries to get a new transmission
-    /// </summary>
-    /// <returns>Null is no transmission is available</returns>
-    public async Task<(bool success, Transmission? trms)> TryGetTransmission()
-    {
-        if (StalledTransmission is not null)
+        /// <summary>
+        /// Create a listening socket
+        /// </summary>
+        /// <param name="port">The port to listen on</param>
+        public Client(int port)
         {
-            var t = await CompleteTransmission(StalledTransmission);
-            return (t is not null, t);
+            IPEndPoint lep = new IPEndPoint(IPAddress.Any, port);
+            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket.Bind(lep);
+            Socket.Listen(10);
         }
 
-        if (StalledTransmission is null && Available)
+        /// <summary>
+        /// Creates a client using a remote socket
+        /// </summary>
+        /// <param name="socket">The remote socket to use</param>
+        /// <exception cref="ArgumentException">The given socket was not remote</exception>
+        public Client(Socket socket)
         {
-            byte[] header = new byte[Transmission.HEADERSIZE];
-            await Receive(header);
-            var t = await CompleteTransmission(new Transmission(header));
-            return t is null ? (false, StalledTransmission = t) : (true, t);
+            if (socket.RemoteEndPoint == null)
+                throw new ArgumentException("Socket was not remote");
+
+            Socket = socket;
         }
 
-        return (false, null);
-
-        async Task<Transmission?> CompleteTransmission(Transmission stalled)
+        ~Client()
         {
-            if (Socket.Available < stalled.Length)
-                return null;
-
-            byte[] data = new byte[stalled.Length];
-            await Receive(data);
-
-            return new Transmission(stalled.Payload, data);
+            Socket.Close();
         }
-    }
 
-    /// <summary>
-    /// Sends the payload
-    /// </summary>
-    /// <param name="payload">The payload to send</param>
-    /// <returns>False if unable to send</returns>
-    public async Task Send(byte[] payload)
-    {
-        int count = 0;
-        do
+        /// <summary>
+        /// Tries to get a new transmission
+        /// </summary>
+        /// <returns>Null is no transmission is available</returns>
+        public async Task<(bool success, Transmission? trms)> TryGetTransmission()
         {
-            var segment = new ArraySegment<byte>(payload, count, payload.Length - count);
-            count += await Socket.SendAsync(segment, SocketFlags.None);
-        }
-        while (count != payload.Length);
-    }
+            if (StalledTransmission != null)
+            {
+                var t = await CompleteTransmission(StalledTransmission);
+                return (t!=null, t);
+            }
 
-    /// <summary>
-    /// Receives payload into a byte array
-    /// </summary>
-    /// <param name="arr">The byte array to receive into, must be initalized to how many bytes to receive</param>
-    public async Task Receive(byte[] arr)
-    {
-        int count = 0;
-        do
+            if (StalledTransmission == null && Available)
+            {
+                byte[] header = new byte[Transmission.HEADERSIZE];
+                await Receive(header);
+                var t = await CompleteTransmission(new Transmission(header));
+                return t == null ? (false, StalledTransmission = t) : (true, t);
+            }
+
+            return (false, null);
+
+            async Task<Transmission?> CompleteTransmission(Transmission stalled)
+            {
+                if (Socket.Available < stalled.Length)
+                    return null;
+
+                byte[] data = new byte[stalled.Length];
+                await Receive(data);
+
+                return new Transmission(stalled.Payload, data);
+            }
+        }
+
+        /// <summary>
+        /// Sends the payload
+        /// </summary>
+        /// <param name="payload">The payload to send</param>
+        /// <returns>False if unable to send</returns>
+        public async Task Send(byte[] payload)
         {
-            var segment = new ArraySegment<byte>(arr, count, arr.Length - count);
-            count += await Socket.ReceiveAsync(segment, SocketFlags.None);
+            int count = 0;
+            do
+            {
+                var segment = new ArraySegment<byte>(payload, count, payload.Length - count);
+                count += await Socket.SendAsync(segment, SocketFlags.None);
+            }
+            while (count != payload.Length);
         }
-        while (count != arr.Length);
-    }
 
-    /// <summary>
-    /// Accepts one new client asynchronously
-    /// </summary>
-    /// <returns>The new client</returns>
-    public async Task<Client> Accept(CancellationToken cancellationToken)
-    {
-        Socket remote = await Socket.AcceptAsync(cancellationToken);
-        return new(remote);
-    }
+        /// <summary>
+        /// Receives payload into a byte array
+        /// </summary>
+        /// <param name="arr">The byte array to receive into, must be initalized to how many bytes to receive</param>
+        public async Task Receive(byte[] arr)
+        {
+            int count = 0;
+            do
+            {
+                var segment = new ArraySegment<byte>(arr, count, arr.Length - count);
+                count += await Socket.ReceiveAsync(segment, SocketFlags.None);
+            }
+            while (count != arr.Length);
+        }
 
-    public override string? ToString()
-    {
-        return Socket.RemoteEndPoint?.ToString();
+        /// <summary>
+        /// Accepts one new client asynchronously
+        /// </summary>
+        /// <returns>The new client</returns>
+        public async Task<Client> Accept()
+        {
+            Socket remote = await Socket.AcceptAsync();
+            return new Client(remote);
+        }
+
+        public override string? ToString()
+        {
+            return Socket.RemoteEndPoint?.ToString();
+        }
     }
 }

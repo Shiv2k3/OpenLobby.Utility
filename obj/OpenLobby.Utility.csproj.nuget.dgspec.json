@@ -1,32 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Shiv\\source\\repos\\OpenLobby.TransmissionUtility\\OpenLobby.Utility.csproj": {}
+    "C:\\Users\\Shiv\\source\\repos\\OpenLobby.Utility\\OpenLobby.Utility.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Shiv\\source\\repos\\OpenLobby.TransmissionUtility\\OpenLobby.Utility.csproj": {
+    "C:\\Users\\Shiv\\source\\repos\\OpenLobby.Utility\\OpenLobby.Utility.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Shiv\\source\\repos\\OpenLobby.TransmissionUtility\\OpenLobby.Utility.csproj",
+        "projectUniqueName": "C:\\Users\\Shiv\\source\\repos\\OpenLobby.Utility\\OpenLobby.Utility.csproj",
         "projectName": "OpenLobby.Utility",
-        "projectPath": "C:\\Users\\Shiv\\source\\repos\\OpenLobby.TransmissionUtility\\OpenLobby.Utility.csproj",
+        "projectPath": "C:\\Users\\Shiv\\source\\repos\\OpenLobby.Utility\\OpenLobby.Utility.csproj",
         "packagesPath": "C:\\Users\\Shiv\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Shiv\\source\\repos\\OpenLobby.TransmissionUtility\\obj\\",
+        "outputPath": "C:\\Users\\Shiv\\source\\repos\\OpenLobby.Utility\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Shiv\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net8.0"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
             "projectReferences": {}
           }
         },
@@ -42,14 +42,8 @@
         }
       },
       "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "Microsoft.Extensions.Configuration.UserSecrets": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
           "imports": [
             "net461",
             "net462",
@@ -62,11 +56,11 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

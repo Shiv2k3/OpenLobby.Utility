@@ -13,7 +13,7 @@
             /// <summary>
             /// Lobby creation was a success 
             /// </summary>
-            LobbyCreated,
+            HostingSuccess,
            
             /// <summary>
             /// Lobby creation was unsuccessful

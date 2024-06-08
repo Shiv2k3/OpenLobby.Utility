@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>OpenLobby.Utility</id>
+    <version>1.0.0</version>
+    <title>OpenLobby Utility</title>
+    <authors>OpenLobby.Utility</authors>
+    <icon>image.jpg</icon>
+    <description>Library for communicating with an OpenLobby server.</description>
+    <copyright>MIT</copyright>
+    <repository type="git" commit="d60b5161ffb4c45d5c7d147bd1f973d042a40ab5" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Shiv\source\repos\OpenLobby.Utility\bin\Debug\netstandard2.1\OpenLobby.Utility.dll" target="lib\netstandard2.1\OpenLobby.Utility.dll" />
+    <file src="C:\Users\Shiv\source\repos\OpenLobby.Utility\bin\Debug\netstandard2.1\OpenLobby.Utility.xml" target="lib\netstandard2.1\OpenLobby.Utility.xml" />
+    <file src="C:\Users\Shiv\Downloads\image.jpg" target="\image.jpg" />
+  </files>
+</package>

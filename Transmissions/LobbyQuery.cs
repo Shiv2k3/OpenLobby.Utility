@@ -37,9 +37,14 @@ namespace OpenLobby.Utility.Transmissions
         /// <summary>
         /// Creates query reply, server-side
         /// </summary>
-        public LobbyQuery(Transmission trms) : base(trms)
+        /// <param name="trms">The transmission to use for reconstruction</param>
+        /// <param name="isReply">Is this a reply or request</param>
+        public LobbyQuery(Transmission trms, bool isReply) : base(trms)
         {
-            Search = new ByteString(Body, 0);
+            if (isReply)
+                Lobbies = new StringArray(Body, 0);
+            else
+                Search = new ByteString(Body, 0);
         }
     }
 }

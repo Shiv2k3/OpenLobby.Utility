@@ -23,6 +23,11 @@ namespace OpenLobby.Utility.Network
         /// The remote endpoint, null if it listening
         /// </summary>
         public IPEndPoint? RemoteEndpoint => Socket.RemoteEndPoint as IPEndPoint;
+        
+        /// <summary>
+        /// The port of the local endpoint
+        /// </summary>
+        public int LocalPort => (Socket.LocalEndPoint as IPEndPoint).Port;
 
         /// <summary>
         /// Create a listening socket
@@ -32,6 +37,7 @@ namespace OpenLobby.Utility.Network
         {
             IPEndPoint lep = new IPEndPoint(IPAddress.Any, port);
             Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             Socket.Bind(lep);
             Socket.Listen(10);
         }
@@ -50,9 +56,9 @@ namespace OpenLobby.Utility.Network
         }
 
         /// <summary>
-        /// Closes the socket
+        /// Closes the connection
         /// </summary>
-        ~Client()
+        public void Disconnect()
         {
             Socket.Close();
         }
@@ -60,32 +66,32 @@ namespace OpenLobby.Utility.Network
         /// <summary>
         /// Tries to get a new transmission
         /// </summary>
-        /// <returns>Null is no transmission is available</returns>
-        public async Task<(bool success, Transmission? trms)> TryGetTransmission()
+        /// <returns>Null if no transmission is available</returns>
+        public (bool success, Transmission? trms) TryGetTransmission()
         {
             if (StalledTransmission != null)
             {
-                var t = await CompleteTransmission(StalledTransmission);
+                var t = CompleteTransmission(StalledTransmission);
                 return (t!=null, t);
             }
 
             if (StalledTransmission == null && Available)
             {
                 byte[] header = new byte[Transmission.HEADERSIZE];
-                await Receive(header);
-                var t = await CompleteTransmission(new Transmission(header));
+                Receive(header);
+                var t = CompleteTransmission(new Transmission(header));
                 return t == null ? (false, StalledTransmission = t) : (true, t);
             }
 
             return (false, null);
 
-            async Task<Transmission?> CompleteTransmission(Transmission stalled)
+            Transmission? CompleteTransmission(Transmission stalled)
             {
                 if (Socket.Available < stalled.Length)
                     return null;
 
                 byte[] data = new byte[stalled.Length];
-                await Receive(data);
+                Receive(data);
 
                 return new Transmission(stalled.Payload, data);
             }
@@ -96,7 +102,7 @@ namespace OpenLobby.Utility.Network
         /// </summary>
         /// <param name="payload">The payload to send</param>
         /// <returns>False if unable to send</returns>
-        public async Task Send(byte[] payload)
+        public async void Send(byte[] payload)
         {
             int count = 0;
             do
@@ -107,17 +113,13 @@ namespace OpenLobby.Utility.Network
             while (count != payload.Length);
         }
 
-        /// <summary>
-        /// Receives payload into a byte array
-        /// </summary>
-        /// <param name="arr">The byte array to receive into, must be initalized to how many bytes to receive</param>
-        public async Task Receive(byte[] arr)
+        private void Receive(byte[] arr)
         {
             int count = 0;
             do
             {
                 var segment = new ArraySegment<byte>(arr, count, arr.Length - count);
-                count += await Socket.ReceiveAsync(segment, SocketFlags.None);
+                count += Socket.Receive(segment, SocketFlags.None);
             }
             while (count != arr.Length);
         }

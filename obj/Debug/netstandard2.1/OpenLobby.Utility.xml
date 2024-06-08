@@ -19,6 +19,11 @@
             The remote endpoint, null if it listening
             </summary>
         </member>
+        <member name="P:OpenLobby.Utility.Network.Client.LocalPort">
+            <summary>
+            The port of the local endpoint
+            </summary>
+        </member>
         <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Int32)">
             <summary>
             Create a listening socket
@@ -32,16 +37,16 @@
             <param name="socket">The remote socket to use</param>
             <exception cref="T:System.ArgumentException">The given socket was not remote</exception>
         </member>
-        <member name="M:OpenLobby.Utility.Network.Client.Finalize">
+        <member name="M:OpenLobby.Utility.Network.Client.Disconnect">
             <summary>
-            Closes the socket
+            Closes the connection
             </summary>
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.TryGetTransmission">
             <summary>
             Tries to get a new transmission
             </summary>
-            <returns>Null is no transmission is available</returns>
+            <returns>Null if no transmission is available</returns>
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.Send(System.Byte[])">
             <summary>
@@ -49,12 +54,6 @@
             </summary>
             <param name="payload">The payload to send</param>
             <returns>False if unable to send</returns>
-        </member>
-        <member name="M:OpenLobby.Utility.Network.Client.Receive(System.Byte[])">
-            <summary>
-            Receives payload into a byte array
-            </summary>
-            <param name="arr">The byte array to receive into, must be initalized to how many bytes to receive</param>
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.Accept">
             <summary>
@@ -131,10 +130,12 @@
             </summary>
             <param name="lobbies"></param>
         </member>
-        <member name="M:OpenLobby.Utility.Transmissions.LobbyQuery.#ctor(OpenLobby.Utility.Transmissions.Transmission)">
+        <member name="M:OpenLobby.Utility.Transmissions.LobbyQuery.#ctor(OpenLobby.Utility.Transmissions.Transmission,System.Boolean)">
             <summary>
             Creates query reply, server-side
             </summary>
+            <param name="trms">The transmission to use for reconstruction</param>
+            <param name="isReply">Is this a reply or request</param>
         </member>
         <member name="T:OpenLobby.Utility.Transmissions.Reply">
             <summary>
@@ -146,7 +147,7 @@
             Reply code
             </summary>
         </member>
-        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.LobbyCreated">
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.HostingSuccess">
             <summary>
             Lobby creation was a success 
             </summary>

@@ -35,10 +35,12 @@ namespace OpenLobby.Utility.Utils
         /// <exception cref="ArgumentException">Length of arr or value was invalid</exception>
         public ByteString(string value, ArraySegment<byte> arr, int start)
         {
-            if (value.Length > byte.MaxValue + HEADERSIZE)
-                throw new ArgumentException("String length must be less than 255 + HEADERSIZE");
-            if (arr.Count - start < value.Length + HEADERSIZE)
-                throw new ArgumentException("The array is not big enough for the encoding, don't forget to count HEADERSIZE of TString");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value was null or empty");
+            if (value.Length > byte.MaxValue)
+                throw new ArgumentException("String length must not overflow a byte");
+            if (arr.Count - start - value.Length - HEADERSIZE < 0)
+                throw new ArgumentException("The array is not big enough for the encoding, array length must account for HEADERSIZE");
 
             Stream = arr.Slice(start, HEADERSIZE + value.Length);
             Body = Stream.Slice(HEADERSIZE, value.Length);
@@ -56,6 +58,7 @@ namespace OpenLobby.Utility.Utils
         {
             Stream = arr.Slice(start, arr[start]);
             Body = Stream.Slice(HEADERSIZE, StreamLength - HEADERSIZE);
+            if (Body.Count == HEADERSIZE) throw new ArgumentException("Value was empty");
         }
     }
 }

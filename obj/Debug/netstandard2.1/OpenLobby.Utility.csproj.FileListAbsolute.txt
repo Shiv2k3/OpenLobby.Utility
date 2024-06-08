@@ -10,3 +10,6 @@ C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\refint\Ope
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.xml
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\ref\OpenLobby.Utility.dll
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.sourcelink.json
+C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.deps.json
+C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.dll
+C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.xml

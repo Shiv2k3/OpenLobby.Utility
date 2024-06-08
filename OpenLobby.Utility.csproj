@@ -8,22 +8,26 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<Title>OpenLobby Utility</Title>
 		<Description>Library for communicating with an OpenLobby server.</Description>
-		<PackageProjectUrl>https://github.com/Shiv2k3/OpenLobby.Utility</PackageProjectUrl>
+		<PackageProjectUrl></PackageProjectUrl>
+		<PackageIcon>image.jpg</PackageIcon>
+		<RepositoryUrl></RepositoryUrl>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Copyright>MIT</Copyright>
+		<PackageReadmeFile></PackageReadmeFile>
+		<BaseOutputPath>C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby</BaseOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <Optimize>True</Optimize>
 	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 	  <DebugType>embedded</DebugType>
+	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 	  <DebugType>embedded</DebugType>
+	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Include="https:\files.oaiusercontent.com\file-uV4iLPIctwwMaQKosnrspyFy%3fse=2024-06-07T23:01:48Z&amp;sp=r&amp;sv=2023-11-03&amp;sr=b&amp;rscc=max-age=31536000, immutable&amp;rscd=attachment%3b filename=5e3c3f3a-aa4c-4419-afda-918e74525607.webp&amp;sig=zPOfcnM\n40Aso\wWXOe0cpD9LhS8rmDg2vlpzLvDMk=" />
-	</ItemGroup>
 
 </Project>

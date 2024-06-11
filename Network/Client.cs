@@ -41,6 +41,17 @@ namespace OpenLobby.Utility.Network
             Socket.Bind(lep);
             Socket.Listen(10);
         }
+        /// <summary>
+        /// Create a listening socket
+        /// </summary>
+        /// <param name="localEndpoint">The endpoint to listen on</param>
+        public Client(IPEndPoint localEndpoint)
+        {
+            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            Socket.Bind(localEndpoint);
+            Socket.Listen(10);
+        }
 
         /// <summary>
         /// Creates a client using a remote socket
@@ -130,8 +141,15 @@ namespace OpenLobby.Utility.Network
         /// <returns>The new client</returns>
         public async Task<Client> Accept()
         {
-            Socket remote = await Socket.AcceptAsync();
-            return new Client(remote);
+            try
+            {
+                Socket remote = await Socket.AcceptAsync();
+                return new Client(remote);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <returns>Remode endpoint as a string</returns>

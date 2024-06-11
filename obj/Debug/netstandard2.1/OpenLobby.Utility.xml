@@ -30,6 +30,12 @@
             </summary>
             <param name="port">The port to listen on</param>
         </member>
+        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.IPEndPoint)">
+            <summary>
+            Create a listening socket
+            </summary>
+            <param name="localEndpoint">The endpoint to listen on</param>
+        </member>
         <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.Sockets.Socket)">
             <summary>
             Creates a client using a remote socket
@@ -103,6 +109,46 @@
             Reconstructs the Host Request using a transmission
             </summary>
         </member>
+        <member name="T:OpenLobby.Utility.Transmissions.JoinRequest">
+            <summary>
+            Represents a Join Request
+            </summary>
+        </member>
+        <member name="P:OpenLobby.Utility.Transmissions.JoinRequest.LobbyID">
+            <summary>
+            The ID of the lobby
+            </summary>
+        </member>
+        <member name="P:OpenLobby.Utility.Transmissions.JoinRequest.LobbyPassword">
+            <summary>
+            The Lobby password
+            </summary>
+        </member>
+        <member name="P:OpenLobby.Utility.Transmissions.JoinRequest.HostAddress">
+            <summary>
+            The IP address and port of the host
+            </summary>
+        </member>
+        <member name="M:OpenLobby.Utility.Transmissions.JoinRequest.#ctor(System.String,System.String)">
+            <summary>
+            Creates the request
+            </summary>
+            <param name="lobbyID">Lobby id</param>
+            <param name="password">Lobby password</param>
+        </member>
+        <member name="M:OpenLobby.Utility.Transmissions.JoinRequest.#ctor(System.String)">
+            <summary>
+            Creates the reply with host endpoint info
+            </summary>
+            <param name="hostEndpoint">The host endpoint</param>
+        </member>
+        <member name="M:OpenLobby.Utility.Transmissions.JoinRequest.#ctor(OpenLobby.Utility.Transmissions.Transmission,System.Boolean)">
+            <summary>
+            Extracts the reply or request
+            </summary>
+            <param name="trms"></param>
+            <param name="isReply">Is this a reply or a request</param>
+        </member>
         <member name="T:OpenLobby.Utility.Transmissions.LobbyQuery">
             <summary>
             Repersents a request to query for lobbies
@@ -115,7 +161,7 @@
         </member>
         <member name="F:OpenLobby.Utility.Transmissions.LobbyQuery.Lobbies">
             <summary>
-            The query result
+            The query result as a keypair value of lobbyID-lobbyName
             </summary>
         </member>
         <member name="M:OpenLobby.Utility.Transmissions.LobbyQuery.#ctor(System.String)">
@@ -142,6 +188,16 @@
             Transmission type used to reply to requests
             </summary>
         </member>
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.ErrorTypeCodeMap">
+            <summary>
+            Maps erronous TransmissionType to a ReplyCode
+            </summary>
+        </member>
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.PassTypeCodeMap">
+            <summary>
+            Maps successful TransmissionType to a ReplyCode
+            </summary>
+        </member>
         <member name="T:OpenLobby.Utility.Transmissions.Reply.Code">
             <summary>
             Reply code
@@ -160,6 +216,16 @@
         <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.QueryError">
             <summary>
             Error encountered when completing query
+            </summary>
+        </member>
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.WrongPassword">
+            <summary>
+            The wrong password was provided
+            </summary>
+        </member>
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.JoinError">
+            <summary>
+            There was an error processing the join request
             </summary>
         </member>
         <member name="P:OpenLobby.Utility.Transmissions.Reply.ReplyCode">
@@ -343,6 +409,14 @@
             <returns></returns>
         </member>
         <member name="M:OpenLobby.Utility.Utils.Helper.GetByteStringLength(System.String[])">
+            <summary>
+            Counts Length of the ByteStrings
+            </summary>
+            <param name="strings">The strings to count</param>
+            <returns>Length if Length is less than <seealso cref="F:System.UInt16.MaxValue"/> </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The total Length of the strings were too long</exception>
+        </member>
+        <member name="M:OpenLobby.Utility.Utils.Helper.GetStringLength(System.String[])">
             <summary>
             Counts Length of the strings
             </summary>

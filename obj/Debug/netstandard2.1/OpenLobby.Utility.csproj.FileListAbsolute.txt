@@ -13,3 +13,6 @@ C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.
 C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.deps.json
 C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.dll
 C:\Users\Shiv\Desktop\Multiplayer test\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.xml
+C:\Users\Shiv\Desktop\OpenNetwork\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.deps.json
+C:\Users\Shiv\Desktop\OpenNetwork\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.dll
+C:\Users\Shiv\Desktop\OpenNetwork\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.xml

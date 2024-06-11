@@ -26,7 +26,7 @@ namespace OpenLobby.Utility.Utils
         }
 
         /// <summary>
-        /// Counts Length of the strings
+        /// Counts Length of the ByteStrings
         /// </summary>
         /// <param name="strings">The strings to count</param>
         /// <returns>Length if Length is less than <seealso cref="ushort.MaxValue"/> </returns>
@@ -41,6 +41,21 @@ namespace OpenLobby.Utility.Utils
             return (count <= ushort.MaxValue) ? (ushort)count : throw new ArgumentOutOfRangeException("Strings were too long");
         }
 
+        /// <summary>
+        /// Counts Length of the strings
+        /// </summary>
+        /// <param name="strings">The strings to count</param>
+        /// <returns>Length if Length is less than <seealso cref="ushort.MaxValue"/> </returns>
+        /// <exception cref="ArgumentOutOfRangeException">The total Length of the strings were too long</exception>
+        public static ushort GetStringLength(params string[] strings)
+        {
+            int count = 0;
+            foreach (var str in strings)
+            {
+                count += str.Length;
+            }
+            return (count <= ushort.MaxValue) ? (ushort)count : throw new ArgumentOutOfRangeException("Strings were too long");
+        }
         /// <summary>
         /// Creates IPv4 string form array
         /// </summary>

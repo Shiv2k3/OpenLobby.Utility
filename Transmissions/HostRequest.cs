@@ -3,6 +3,7 @@ using System;
 
 namespace OpenLobby.Utility.Transmissions
 {
+
     /// <summary>
     /// A transmission to request to host a lobby
     /// </summary>
@@ -37,7 +38,7 @@ namespace OpenLobby.Utility.Transmissions
         /// <param name="maxClients">Max number of playe, must be greater than 1</param>
         public HostRequest(string name, string password, bool publicVisible, byte maxClients) : base(0, (ushort)(HEADERSIZE + Helper.GetByteStringLength(name, password)))
         {
-            TestInput(name, password, maxClients);
+            VerifyInput(name, password, maxClients);
 
             MaxClients = new ByteMember(Body, 0, maxClients);
             Visible = new ByteMember(Body, 1, publicVisible ? byte.MaxValue : byte.MinValue);
@@ -55,10 +56,10 @@ namespace OpenLobby.Utility.Transmissions
             Name = new ByteString(Body, 2);
             Password = new ByteString(Body, 2 + Name.StreamLength);
 
-            TestInput(Name.Value, Password.Value, MaxClients.Value);
+            VerifyInput(Name.Value, Password.Value, MaxClients.Value);
         }
 
-        private void TestInput(string name, string pass, byte max)
+        private void VerifyInput(string name, string pass, byte max)
         {
             if (name.Length < 5 || name.Length > 16)
                 throw new ArgumentOutOfRangeException($"Lobby name length {Name.Value.Length} is out of range");

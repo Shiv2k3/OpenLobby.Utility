@@ -7,16 +7,17 @@ namespace OpenLobby.Utility.Transmissions
     /// Repersents a base header-only transmission without any data transmission, inherieting classes should simply wrap over Data
     /// </summary>
     public partial class Transmission
-    {
+    {        
         /// <summary>
         /// Transmission types
         /// </summary>
         public enum TransmisisonType
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         {
-            HostRequest,
+            Host,
             Reply,
-            LobbyQuery,
+            Query,
+            Join
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 

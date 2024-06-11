@@ -13,7 +13,7 @@ namespace OpenLobby.Utility.Transmissions
         public ByteString? Search;
 
         /// <summary>
-        /// The query result
+        /// The query result as a keypair value of lobbyID-lobbyName
         /// </summary>
         public StringArray? Lobbies;
 

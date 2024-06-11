@@ -25,8 +25,12 @@ namespace OpenLobby.Utility.Utils
         /// <param name="body"></param>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public ByteMember(in ArraySegment<byte> body, int index, byte value) => this.value = body[index] = value;
-        
+        public ByteMember(in ArraySegment<byte> body, int index, byte value)
+        {
+            body[index] = value;
+            this.value = value;
+        }
+
         /// <summary>
         /// Constructs using the byte at index
         /// </summary>

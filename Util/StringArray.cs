@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace OpenLobby.Utility.Utils  
 {
@@ -25,26 +26,37 @@ namespace OpenLobby.Utility.Utils
         /// <param name="index"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public ByteString this[int index]
+        public unsafe string this[int index]
         {
             get
             {
-                if (index >= Stream[0])
+                if (index >= Count.Value)
                     throw new IndexOutOfRangeException();
 
-                int stringIndex = 0;
+                int start = Body.Offset;
+                int length = Lengths[index];
                 for (int i = 0; i < index; i++)
                 {
-                    stringIndex += Lengths[i];
+                    start += Lengths[i];
                 }
-                return new ByteString(Body, stringIndex);
+                return Encoding.UTF8.GetString(Stream.Array, start, length);
             }
             private set
             {
-                if (index >= Stream[0])
+                if (index >= Count.Value)
                     throw new IndexOutOfRangeException();
+                if (value.Length > 255)
+                    throw new ArgumentException("String was too long");
 
-                Lengths[index] = value.StreamLength;
+                int start = Body.Offset;
+                Lengths[index] = (byte)value.Length;
+                for (int i = 0; i < index; i++)
+                {
+                    start += Lengths[i];
+                }
+
+                var b = Encoding.UTF8.GetBytes(value);
+                Buffer.BlockCopy(b, 0, Stream.Array, start, value.Length);
             }
         }
 
@@ -61,22 +73,22 @@ namespace OpenLobby.Utility.Utils
                 throw new ArgumentException("Strings array was too long");
 
             int c = strings.Length;
-            int bodyLength = Helper.GetByteStringLength(strings);
+            int bodyLength = Helper.GetStringLength(strings);
             int header = 1;
             int length = header + c + bodyLength;
+
+            if (body.Count - start < length)
+                throw new ArgumentException("Array segment was not large enough");
 
             Stream = body.Slice(start, length);
             Count = new ByteMember(body, 0, (byte)c);
 
             Lengths = Stream.Slice(header, c);
-            Body = Stream.Slice(c + header, bodyLength);
+            Body = Stream.Slice(header + c, bodyLength);
 
-            start = 0;
             for (int i = 0; i < strings.Length; i++)
             {
-                var s = new ByteString(strings[i], Body, start);
-                this[i] = s;
-                start += s.StreamLength;
+                this[i] = strings[i];
             }
         }
 
@@ -111,6 +123,6 @@ namespace OpenLobby.Utility.Utils
         /// </summary>
         /// <param name="strings">The strings that will be encoded</param>
         /// <returns>The header length</returns>
-        public static int GetHeaderSize(params string[] strings) => 1 + strings.Length + Helper.GetByteStringLength(strings);
+        public static int GetHeaderSize(params string[] strings) => 1 + strings.Length + Helper.GetStringLength(strings);
     }
 }

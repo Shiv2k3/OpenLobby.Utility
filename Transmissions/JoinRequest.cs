@@ -27,7 +27,7 @@ namespace OpenLobby.Utility.Transmissions
         /// </summary>
         /// <param name="lobbyID">Lobby id</param>
         /// <param name="password">Lobby password</param>
-        public JoinRequest(string lobbyID, string password) : base((ushort)TransmisisonType.Join, Helper.GetByteStringLength(lobbyID, password))
+        public JoinRequest(string lobbyID, string password) : base((ushort)TransmisisonType.Join, Helper.SumOfByteStrings(lobbyID, password))
         {
             LobbyID = new ByteString(lobbyID, Body, 0);
             LobbyPassword = new ByteString(password, Body, LobbyID.StreamLength);
@@ -37,7 +37,7 @@ namespace OpenLobby.Utility.Transmissions
         /// Creates the reply with host endpoint info
         /// </summary>
         /// <param name="hostEndpoint">The host endpoint</param>
-        public JoinRequest(string hostEndpoint) : base((ushort)TransmisisonType.Join, Helper.GetByteStringLength(hostEndpoint))
+        public JoinRequest(string hostEndpoint) : base((ushort)TransmisisonType.Join, Helper.SumOfByteStrings(hostEndpoint))
         {
             HostAddress = new ByteString(hostEndpoint, Body, 0);
         }

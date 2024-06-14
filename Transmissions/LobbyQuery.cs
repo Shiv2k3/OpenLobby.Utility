@@ -1,4 +1,5 @@
 ﻿using OpenLobby.Utility.Utils;
+using System;
 
 namespace OpenLobby.Utility.Transmissions
 {
@@ -21,7 +22,7 @@ namespace OpenLobby.Utility.Transmissions
         /// Creates query, client-side
         /// </summary>
         /// <param name="search">Lobby name</param>
-        public LobbyQuery(string search) : base(2, (ushort)StringArray.GetHeaderSize(search))
+        public LobbyQuery(string search) : base(2, (ushort)StringArray.GetRequiredLength(search))
         {
             Search = new ByteString(search, Body, 0);
         }
@@ -30,9 +31,9 @@ namespace OpenLobby.Utility.Transmissions
         /// Construct using lobbies
         /// </summary>
         /// <param name="lobbies"></param>
-        public LobbyQuery(params string[] lobbies) : base(2, (ushort)StringArray.GetHeaderSize(lobbies))
+        public LobbyQuery(params string[] lobbies) : base(2, (ushort)StringArray.GetRequiredLength(lobbies))
         {
-            Lobbies = new StringArray(Body, 0, lobbies);
+            Lobbies = new StringArray(Body, lobbies);
         }
         /// <summary>
         /// Creates query reply, server-side
@@ -42,7 +43,7 @@ namespace OpenLobby.Utility.Transmissions
         public LobbyQuery(Transmission trms, bool isReply) : base(trms)
         {
             if (isReply)
-                Lobbies = new StringArray(Body, 0);
+                Lobbies = new StringArray(Body);
             else
                 Search = new ByteString(Body, 0);
         }

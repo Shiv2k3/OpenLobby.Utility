@@ -8,114 +8,112 @@ namespace OpenLobby.Utility.Utils
     /// </summary>
     public class StringArray
     {
-        // first byte # of strings, C, followed by C many bytes stating offset to the start of the next string
-        // max C is 255
-        // max string length is 255
-        private readonly ArraySegment<byte> Stream;
-        private readonly ArraySegment<byte> Lengths;
+        /// <summary>
+        /// Segment must have exact required length, use <see cref="GetRequiredLength"/> to get exact length.
+        /// </summary>
+        public class SegmentOutOfRange : Exception { }
+        /// <summary>
+        /// Segment was null, to encode/decode the segment must be provided.
+        /// </summary>
+        public class StringArrayOutOfRange : Exception { }
+        /// <summary>
+        /// A string was longer than 255 bytes.
+        /// </summary>
+        public class StringOutOfRange : Exception { }
+        /// <summary>
+        /// A string was null or empty, every string must have 1 or more characters for safety.
+        /// </summary>
+        public class BadString : Exception { }
+
+        private readonly ArraySegment<byte> Offsets;
         private readonly ArraySegment<byte> Body;
 
         /// <summary>
         /// Total number of strings
         /// </summary>
-        public ByteMember Count { get; private set; }
+        public byte Count { get => _count.Value; }
+        private readonly ByteMember _count;
 
         /// <summary>
-        /// Index the internal byte stream
+        /// Indexes the array
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="index">The index</param>
+        /// <returns>The string at index</returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public unsafe string this[int index]
+        public string this[int index]
         {
             get
             {
-                if (index >= Count.Value)
+                if (index >= Count)
                     throw new IndexOutOfRangeException();
 
                 int start = Body.Offset;
-                int length = Lengths[index];
+                int length = Offsets[index];
                 for (int i = 0; i < index; i++)
                 {
-                    start += Lengths[i];
+                    start += Offsets[i];
                 }
-                return Encoding.UTF8.GetString(Stream.Array, start, length);
-            }
-            private set
-            {
-                if (index >= Count.Value)
-                    throw new IndexOutOfRangeException();
-                if (value.Length > 255)
-                    throw new ArgumentException("String was too long");
-
-                int start = Body.Offset;
-                Lengths[index] = (byte)value.Length;
-                for (int i = 0; i < index; i++)
-                {
-                    start += Lengths[i];
-                }
-
-                var b = Encoding.UTF8.GetBytes(value);
-                Buffer.BlockCopy(b, 0, Stream.Array, start, value.Length);
+                return Encoding.UTF8.GetString(Body.Array, start, length);
             }
         }
 
         /// <summary>
         /// Constructs the string array into the array segment from the start index
         /// </summary>
-        /// <param name="body">The array segment the strings are stored in</param>
-        /// <param name="start">The starting index of the stream</param>
-        /// <param name="strings">The strings to place in the array segment</param>
-        /// <exception cref="ArgumentException">The given string was too long</exception>
-        public StringArray(in ArraySegment<byte> body, int start, params string[] strings)
+        /// <param name="segment">The correctly sized byte segment</param>
+        /// <param name="strings">The strings to place in the segment</param>
+        /// <exception cref="StringArrayOutOfRange"></exception>
+        /// <exception cref="StringOutOfRange"></exception>
+        /// <exception cref="SegmentOutOfRange"></exception>
+        public StringArray(in ArraySegment<byte> segment, params string[] strings)
         {
             if (strings.Length > byte.MaxValue)
-                throw new ArgumentException("Strings array was too long");
+                throw new StringArrayOutOfRange();
 
-            int c = strings.Length;
-            int bodyLength = Helper.GetStringLength(strings);
-            int header = 1;
-            int length = header + c + bodyLength;
+            byte count = (byte)strings.Length;
+            ushort sumOffset = Helper.SumOfStrings(strings);
+            ushort length = (ushort)(1 + count + sumOffset);
 
-            if (body.Count - start < length)
-                throw new ArgumentException("Array segment was not large enough");
+            if (segment.Count != length)
+                throw new SegmentOutOfRange();
 
-            Stream = body.Slice(start, length);
-            Count = new ByteMember(body, 0, (byte)c);
+            _count = new ByteMember(segment, 0, count);
+            Offsets = segment.Slice(1, count);
+            Body = segment.Slice(1 + count, sumOffset);
 
-            Lengths = Stream.Slice(header, c);
-            Body = Stream.Slice(header + c, bodyLength);
-
-            for (int i = 0; i < strings.Length; i++)
+            for (int i = 0, index = 0; i < strings.Length; i++)
             {
-                this[i] = strings[i];
+                var str = strings[i];
+                
+                if (str.Length > byte.MaxValue)
+                    throw new StringOutOfRange();
+
+                Offsets[i] = (byte)str.Length;
+                var bytes = Encoding.UTF8.GetBytes(str);
+                Buffer.BlockCopy(bytes, 0, Body.Array, Body.Offset + index, Offsets[i]);
+                index += Offsets[i];
             }
         }
 
         /// <summary>
         /// Reconstructs using the array segment and starting index
         /// </summary>
-        /// <param name="body">The array segment with the strings</param>
-        /// <param name="start">The starting index of the stream</param>
-        public StringArray(in ArraySegment<byte> body, int start)
+        /// <param name="segment">The correctly sized byte segment</param>
+        /// <exception cref="BadString"></exception>
+        public StringArray(in ArraySegment<byte> segment)
         {
-            int c = body[start];
-            int header = 1;
-
-            int indicesStart = start + header;
-            int bodyStart = indicesStart + c;
-            Lengths = body.Slice(indicesStart, c);
-
-            int bodyLength = 0;
-            for (int i = 0; i < c; i++)
+            byte count = segment[0];
+            ushort totalOffset = 0;
+            for (int i = 0; i < count; i++)
             {
-                bodyLength += Lengths[i];
+                byte offset = segment[1 + i];
+                if (offset == 0)
+                    throw new BadString();
+                totalOffset += offset;
             }
-            int length = header + c + bodyLength;
-
-            Stream = body.Slice(start, length);
-            Count = new ByteMember(Stream, 0, (byte)c);
-            Body = body.Slice(bodyStart, bodyLength);
+            _count = new ByteMember(segment, 0);
+            Offsets = segment.Slice(1, count);
+            Body = segment.Slice(1 + count, totalOffset);
         }
 
         /// <summary>
@@ -123,6 +121,6 @@ namespace OpenLobby.Utility.Utils
         /// </summary>
         /// <param name="strings">The strings that will be encoded</param>
         /// <returns>The header length</returns>
-        public static int GetHeaderSize(params string[] strings) => 1 + strings.Length + Helper.GetStringLength(strings);
+        public static int GetRequiredLength(params string[] strings) => 1 + strings.Length + Helper.SumOfStrings(strings);
     }
 }

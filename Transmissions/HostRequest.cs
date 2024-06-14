@@ -36,7 +36,7 @@ namespace OpenLobby.Utility.Transmissions
         /// <param name="password">The lobby password used to authenticate clients</param> 
         /// <param name="publicVisible">Is the lobby publicly searchable</param>
         /// <param name="maxClients">Max number of playe, must be greater than 1</param>
-        public HostRequest(string name, string password, bool publicVisible, byte maxClients) : base(0, (ushort)(HEADERSIZE + Helper.GetByteStringLength(name, password)))
+        public HostRequest(string name, string password, bool publicVisible, byte maxClients) : base(0, (ushort)(HEADERSIZE + Helper.SumOfByteStrings(name, password)))
         {
             VerifyInput(name, password, maxClients);
 

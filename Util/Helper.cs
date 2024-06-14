@@ -10,10 +10,13 @@ namespace OpenLobby.Utility.Utils
         /// <summary>
         /// Sets the bytes from ushort into arr at index i1 and i2
         /// </summary>
-        public static void SetUshort(ushort value, int i1, int i2, ArraySegment<byte> arr)
+        public static void SetUshort(in ushort value, in int i1, in int i2, in ArraySegment<byte> arr)
         {
-            arr[i1] = (byte)(value >> 8);
-            arr[i2] = (byte)value;
+            unchecked
+            {
+                arr[i1] = (byte)value;
+                arr[i2] = (byte)(value >> 8);
+            }
         }
 
         /// <summary>
@@ -22,7 +25,7 @@ namespace OpenLobby.Utility.Utils
         /// <returns></returns>
         public static ushort GetUshort(int i1, int i2, ArraySegment<byte> arr)
         {
-            return (ushort)(arr[i1] << 8 | arr[i2]);
+            return (ushort)(arr[i2] << 8 | arr[i1]);
         }
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace OpenLobby.Utility.Utils
         /// <param name="strings">The strings to count</param>
         /// <returns>Length if Length is less than <seealso cref="ushort.MaxValue"/> </returns>
         /// <exception cref="ArgumentOutOfRangeException">The total Length of the strings were too long</exception>
-        public static ushort GetByteStringLength(params string[] strings)
+        public static ushort SumOfByteStrings(params string[] strings)
         {
             int count = strings.Length * ByteString.HEADERSIZE;
             foreach (var str in strings)
@@ -42,12 +45,13 @@ namespace OpenLobby.Utility.Utils
         }
 
         /// <summary>
-        /// Counts Length of the strings
+        /// Sums the length of the strings
         /// </summary>
         /// <param name="strings">The strings to count</param>
-        /// <returns>Length if Length is less than <seealso cref="ushort.MaxValue"/> </returns>
+        /// <returns>Sum if it is less than <seealso cref="ushort.MaxValue"/> </returns>
         /// <exception cref="ArgumentOutOfRangeException">The total Length of the strings were too long</exception>
-        public static ushort GetStringLength(params string[] strings)
+        /// <exception cref="NullReferenceException">Strings or it's element was null</exception>
+        public static ushort SumOfStrings(params string[] strings)
         {
             int count = 0;
             foreach (var str in strings)
@@ -55,15 +59,6 @@ namespace OpenLobby.Utility.Utils
                 count += str.Length;
             }
             return (count <= ushort.MaxValue) ? (ushort)count : throw new ArgumentOutOfRangeException("Strings were too long");
-        }
-        /// <summary>
-        /// Creates IPv4 string form array
-        /// </summary>
-        /// <param name="arraySegment">Must have at least 4 elements</param>
-        /// <returns>The IP string</returns>
-        public static ReadOnlySpan<char> GetIP(ArraySegment<byte> arraySegment)
-        {
-            return $"{arraySegment[0]}.{arraySegment[1]}.{arraySegment[2]}.{arraySegment[3]}";
         }
     }
 }

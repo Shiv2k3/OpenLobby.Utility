@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenLobby.Utility.Transmissions;
 
@@ -23,11 +24,13 @@ namespace OpenLobby.Utility.Network
         /// The remote endpoint, null if it listening
         /// </summary>
         public IPEndPoint? RemoteEndpoint => Socket.RemoteEndPoint as IPEndPoint;
-        
+
         /// <summary>
         /// The port of the local endpoint
         /// </summary>
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         public int LocalPort => (Socket.LocalEndPoint as IPEndPoint).Port;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
         /// <summary>
         /// Create a listening socket
@@ -51,6 +54,19 @@ namespace OpenLobby.Utility.Network
             Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             Socket.Bind(localEndpoint);
             Socket.Listen(10);
+        }
+
+        /// <summary>
+        /// Connects to a remote endpoint
+        /// </summary>
+        /// <param name="localEndpoint">The local endpoint</param>
+        /// <param name="remoteEndpoint">The remote endpoint</param>
+        public Client(IPEndPoint localEndpoint, IPEndPoint remoteEndpoint)
+        {
+            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            Socket.Bind(localEndpoint);
+            Socket.ConnectAsync(remoteEndpoint).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -83,7 +99,7 @@ namespace OpenLobby.Utility.Network
             if (StalledTransmission != null)
             {
                 var t = CompleteTransmission(StalledTransmission);
-                return (t!=null, t);
+                return (t != null, t);
             }
 
             if (StalledTransmission == null && Available)
@@ -139,17 +155,21 @@ namespace OpenLobby.Utility.Network
         /// Accepts one new client asynchronously
         /// </summary>
         /// <returns>The new client</returns>
-        public async Task<Client> Accept()
+        public async Task<Client> Accept(CancellationToken cs)
         {
-            try
+            var acceptTask = Socket.AcceptAsync();
+            var cancelTask = Task.Delay(Timeout.Infinite, cs);
+
+            var completedTask = await Task.WhenAny(acceptTask, cancelTask);
+
+            if (completedTask == cancelTask)
             {
-                Socket remote = await Socket.AcceptAsync();
-                return new Client(remote);
+                cs.ThrowIfCancellationRequested();
             }
-            catch
-            {
-                return null;
-            }
+
+            Socket remote = await acceptTask;
+            return new Client(remote);
+
         }
 
         /// <returns>Remode endpoint as a string</returns>

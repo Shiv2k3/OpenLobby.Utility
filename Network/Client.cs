@@ -98,7 +98,7 @@ namespace OpenLobby.Utility.Network
         {
             Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp)
             {
-                LingerState = new LingerOption(true, 1)
+                LingerState = new LingerOption(false, 0)
             };
 
             return socket;

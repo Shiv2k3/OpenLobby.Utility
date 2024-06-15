@@ -56,9 +56,14 @@ namespace OpenLobby.Utility.Transmissions
             JoinError,
 
             /// <summary>
-            /// Disconnect message
+            /// Init disconnection
             /// </summary>
-            Disconnect
+            DisconnectInit,
+
+            /// <summary>
+            /// Acknowledge disconnection
+            /// </summary>
+            DisconnectAck
         }
 
         /// <summary>

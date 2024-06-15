@@ -244,9 +244,14 @@
             There was an error processing the join request
             </summary>
         </member>
-        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.Disconnect">
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.DisconnectInit">
             <summary>
-            Disconnect message
+            Init disconnection
+            </summary>
+        </member>
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.DisconnectAck">
+            <summary>
+            Acknowledge disconnection
             </summary>
         </member>
         <member name="P:OpenLobby.Utility.Transmissions.Reply.ReplyCode">

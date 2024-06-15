@@ -39,17 +39,18 @@ namespace OpenLobby.Utility.Network
         public Client(int port)
         {
             IPEndPoint lep = new IPEndPoint(IPAddress.Any, port);
-            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket = CreateDefaultSocket();
             Socket.Bind(lep);
             Socket.Listen(10);
         }
+
         /// <summary>
         /// Create a listening socket
         /// </summary>
         /// <param name="localEndpoint">The endpoint to listen on</param>
         public Client(IPEndPoint localEndpoint)
         {
-            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket = CreateDefaultSocket();
             Socket.Bind(localEndpoint);
             Socket.Listen(10);
         }
@@ -61,7 +62,7 @@ namespace OpenLobby.Utility.Network
         /// <param name="remoteEndpoint">The remote endpoint</param>
         public Client(IPEndPoint localEndpoint, IPEndPoint remoteEndpoint)
         {
-            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket = CreateDefaultSocket();
             Socket.Bind(localEndpoint);
             Socket.ConnectAsync(remoteEndpoint).GetAwaiter().GetResult();
         }
@@ -77,6 +78,14 @@ namespace OpenLobby.Utility.Network
                 throw new ArgumentException("Socket was not remote");
 
             Socket = socket;
+        }
+
+        private static Socket CreateDefaultSocket()
+        {
+            return new Socket(SocketType.Stream, ProtocolType.Tcp)
+            {
+                LingerState = new LingerOption(false, 0)
+            };
         }
 
         /// <summary>

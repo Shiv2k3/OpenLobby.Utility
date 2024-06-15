@@ -14,8 +14,8 @@
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Copyright>MIT</Copyright>
 		<PackageReadmeFile></PackageReadmeFile>
-		<BaseOutputPath>C:\Users\Shiv\Desktop\OpenNetwork\Assets\Plugins\OpenLobby</BaseOutputPath>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<BaseOutputPath>C:\Users\Shiv\Desktop\OpenNetwork\Assets\Plugins\OpenLobby</BaseOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

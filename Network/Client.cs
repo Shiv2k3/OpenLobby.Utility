@@ -63,7 +63,21 @@ namespace OpenLobby.Utility.Network
         public Client(IPEndPoint localEndpoint, IPEndPoint remoteEndpoint)
         {
             Socket = CreateDefaultSocket();
-            Socket.Bind(localEndpoint);
+            try
+            {
+                Socket.Bind(localEndpoint);
+
+            }
+            catch (SocketException sockExcp)
+            {
+                if (sockExcp.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                {
+                    Socket.Dispose();
+                    throw new AddressInUse();
+                }
+                throw;
+            }
+            catch { throw; }
             Socket.ConnectAsync(remoteEndpoint).GetAwaiter().GetResult();
         }
 

@@ -76,6 +76,16 @@
         <member name="M:OpenLobby.Utility.Network.Client.ToString">
             <returns>Remode endpoint as a string</returns>
         </member>
+        <member name="T:OpenLobby.Utility.Network.AddressInUse">
+            <summary>
+            The address was already in use
+            </summary>
+        </member>
+        <member name="M:OpenLobby.Utility.Network.AddressInUse.#ctor">
+            <summary>
+            The constructor
+            </summary>
+        </member>
         <member name="T:OpenLobby.Utility.Transmissions.HostRequest">
             <summary>
             A transmission to request to host a lobby

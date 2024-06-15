@@ -137,7 +137,7 @@ namespace OpenLobby.Utility.Network
         /// Sends the payload async
         /// </summary>
         /// <param name="payload">The payload to send</param>
-        public async void Send(byte[] payload)
+        public async Task Send(byte[] payload)
         {
             int count = 0;
             do

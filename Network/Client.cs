@@ -40,7 +40,6 @@ namespace OpenLobby.Utility.Network
         {
             IPEndPoint lep = new IPEndPoint(IPAddress.Any, port);
             Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             Socket.Bind(lep);
             Socket.Listen(10);
         }
@@ -51,7 +50,6 @@ namespace OpenLobby.Utility.Network
         public Client(IPEndPoint localEndpoint)
         {
             Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             Socket.Bind(localEndpoint);
             Socket.Listen(10);
         }
@@ -64,7 +62,6 @@ namespace OpenLobby.Utility.Network
         public Client(IPEndPoint localEndpoint, IPEndPoint remoteEndpoint)
         {
             Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             Socket.Bind(localEndpoint);
             Socket.ConnectAsync(remoteEndpoint).GetAwaiter().GetResult();
         }
@@ -87,6 +84,7 @@ namespace OpenLobby.Utility.Network
         /// </summary>
         public void Disconnect()
         {
+            Socket.Shutdown(SocketShutdown.Both);
             Socket.Close();
         }
 

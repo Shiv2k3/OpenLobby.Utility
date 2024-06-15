@@ -82,10 +82,12 @@ namespace OpenLobby.Utility.Network
 
         private static Socket CreateDefaultSocket()
         {
-            return new Socket(SocketType.Stream, ProtocolType.Tcp)
+            Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp)
             {
-                LingerState = new LingerOption(false, 0)
+                LingerState = new LingerOption(true, 1)
             };
+
+            return socket;
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace OpenLobby.Utility.Network
         public void Disconnect()
         {
             Socket.Shutdown(SocketShutdown.Both);
-            Socket.Close();
+            Socket.Disconnect(false);
         }
 
         /// <summary>
@@ -132,10 +134,9 @@ namespace OpenLobby.Utility.Network
         }
 
         /// <summary>
-        /// Sends the payload
+        /// Sends the payload async
         /// </summary>
         /// <param name="payload">The payload to send</param>
-        /// <returns>False if unable to send</returns>
         public async void Send(byte[] payload)
         {
             int count = 0;

@@ -63,10 +63,9 @@
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.Send(System.Byte[])">
             <summary>
-            Sends the payload
+            Sends the payload async
             </summary>
             <param name="payload">The payload to send</param>
-            <returns>False if unable to send</returns>
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.Accept(System.Threading.CancellationToken)">
             <summary>
@@ -233,6 +232,11 @@
         <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.JoinError">
             <summary>
             There was an error processing the join request
+            </summary>
+        </member>
+        <member name="F:OpenLobby.Utility.Transmissions.Reply.Code.Disconnect">
+            <summary>
+            Disconnect message
             </summary>
         </member>
         <member name="P:OpenLobby.Utility.Transmissions.Reply.ReplyCode">

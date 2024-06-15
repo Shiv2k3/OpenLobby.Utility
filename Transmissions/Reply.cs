@@ -54,6 +54,11 @@ namespace OpenLobby.Utility.Transmissions
             /// There was an error processing the join request
             /// </summary>
             JoinError,
+
+            /// <summary>
+            /// Disconnect message
+            /// </summary>
+            Disconnect
         }
 
         /// <summary>

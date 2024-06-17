@@ -85,6 +85,7 @@ namespace OpenLobby.Utility.Network
         {
             Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             return socket;
         }
 
@@ -94,7 +95,7 @@ namespace OpenLobby.Utility.Network
         public void Disconnect()
         {
             Socket.Shutdown(SocketShutdown.Both);
-            Socket.Close();
+            Socket.Disconnect(true);
         }
 
         /// <summary>

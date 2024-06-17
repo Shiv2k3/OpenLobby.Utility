@@ -14,7 +14,6 @@ namespace OpenLobby.Utility.Network
     {
         private readonly Socket Socket;
         private Transmission? StalledTransmission;
-        private bool shutdownItit;
 
         /// <summary>
         /// True when new transmission is available
@@ -185,6 +184,16 @@ namespace OpenLobby.Utility.Network
         public override string? ToString()
         {
             return Socket.RemoteEndPoint?.ToString();
+        }
+        /// <summary>Gets the hashcode</summary>
+        public override int GetHashCode()
+        {
+            return RemoteEndpoint!.GetHashCode();
+        }
+        /// <summary> Are the two equal </summary>
+        public override bool Equals(object obj)
+        {
+            return RemoteEndpoint!.Equals(((Client)obj).RemoteEndpoint);
         }
     }
 }

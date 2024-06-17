@@ -14,6 +14,7 @@ namespace OpenLobby.Utility.Network
     {
         private readonly Socket Socket;
         private Transmission? StalledTransmission;
+        private bool shutdownItit;
 
         /// <summary>
         /// True when new transmission is available
@@ -63,21 +64,7 @@ namespace OpenLobby.Utility.Network
         public Client(IPEndPoint localEndpoint, IPEndPoint remoteEndpoint)
         {
             Socket = CreateDefaultSocket();
-            try
-            {
-                Socket.Bind(localEndpoint);
-
-            }
-            catch (SocketException sockExcp)
-            {
-                if (sockExcp.SocketErrorCode == SocketError.AddressAlreadyInUse)
-                {
-                    Socket.Dispose();
-                    throw new AddressInUse();
-                }
-                throw;
-            }
-            catch { throw; }
+            Socket.Bind(localEndpoint);
             Socket.ConnectAsync(remoteEndpoint).GetAwaiter().GetResult();
         }
 
@@ -96,10 +83,8 @@ namespace OpenLobby.Utility.Network
 
         private static Socket CreateDefaultSocket()
         {
-            Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp)
-            {
-                LingerState = new LingerOption(false, 0)
-            };
+            Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
             return socket;
         }

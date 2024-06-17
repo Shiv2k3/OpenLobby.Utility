@@ -10,6 +10,6 @@ namespace OpenLobby.Utility.Network
         /// <summary>
         /// The constructor
         /// </summary>
-        public AddressInUse() : base("The address was already in use, the socket has been disposed") { }
+        public AddressInUse() : base("The address is already in use, the socket has been disposed") { }
     }
 }

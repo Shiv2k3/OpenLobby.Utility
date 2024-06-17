@@ -176,6 +176,7 @@ namespace OpenLobby.Utility.Network
 
             Socket remote = await acceptTask;
             remote.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            remote.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             return new Client(remote);
 
         }

@@ -85,7 +85,6 @@ namespace OpenLobby.Utility.Network
         {
             Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-
             return socket;
         }
 
@@ -95,7 +94,7 @@ namespace OpenLobby.Utility.Network
         public void Disconnect()
         {
             Socket.Shutdown(SocketShutdown.Both);
-            Socket.Disconnect(false);
+            Socket.Close();
         }
 
         /// <summary>
@@ -175,6 +174,7 @@ namespace OpenLobby.Utility.Network
             }
 
             Socket remote = await acceptTask;
+            remote.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             return new Client(remote);
 
         }

@@ -186,23 +186,5 @@ namespace OpenLobby.Utility.Network
         {
             return Socket.RemoteEndPoint?.ToString();
         }
-
-        /// <summary>
-        /// Creates a unique ID using the remote endpoint IP info
-        /// </summary>
-        public override int GetHashCode()
-        {
-            return RemoteEndpoint!.Address.GetAddressBytes().Sum(x => x) + RemoteEndpoint.Port;
-        }
-
-        /// <summary>
-        /// Checks for equality
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            return (obj as Client).GetHashCode() == GetHashCode();
-        }
     }
 }

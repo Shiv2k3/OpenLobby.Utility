@@ -76,6 +76,12 @@
         <member name="M:OpenLobby.Utility.Network.Client.ToString">
             <returns>Remode endpoint as a string</returns>
         </member>
+        <member name="M:OpenLobby.Utility.Network.Client.GetHashCode">
+            <summary>Gets the hashcode</summary>
+        </member>
+        <member name="M:OpenLobby.Utility.Network.Client.Equals(System.Object)">
+            <summary> Are the two equal </summary>
+        </member>
         <member name="T:OpenLobby.Utility.Network.AddressInUse">
             <summary>
             The address was already in use

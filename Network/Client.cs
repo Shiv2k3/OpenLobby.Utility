@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -185,15 +186,23 @@ namespace OpenLobby.Utility.Network
         {
             return Socket.RemoteEndPoint?.ToString();
         }
-        /// <summary>Gets the hashcode</summary>
+
+        /// <summary>
+        /// Creates a unique ID using the remote endpoint IP info
+        /// </summary>
         public override int GetHashCode()
         {
-            return RemoteEndpoint!.GetHashCode();
+            return RemoteEndpoint!.Address.GetAddressBytes().Sum(x => x) + RemoteEndpoint.Port;
         }
-        /// <summary> Are the two equal </summary>
+
+        /// <summary>
+        /// Checks for equality
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return RemoteEndpoint!.Equals(((Client)obj).RemoteEndpoint);
+            return (obj as Client).GetHashCode() == GetHashCode();
         }
     }
 }

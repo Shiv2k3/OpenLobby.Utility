@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("MIT")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Library for communicating with an OpenLobby server.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d118a7eaa13fe6b19a1b97b0117cc488f7c5fa2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95feade1ad9934b6f433b2caa3309bd60e01ee1a")]
 [assembly: System.Reflection.AssemblyProductAttribute("OpenLobby.Utility")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OpenLobby.Utility")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

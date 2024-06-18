@@ -9,11 +9,6 @@
             Repersents a network client
             </summary>
         </member>
-        <member name="P:OpenLobby.Utility.Network.Client.Available">
-            <summary>
-            True when new transmission is available
-            </summary>
-        </member>
         <member name="P:OpenLobby.Utility.Network.Client.RemoteEndpoint">
             <summary>
             The remote endpoint, null if it listening
@@ -24,30 +19,49 @@
             The port of the local endpoint
             </summary>
         </member>
-        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Int32)">
+        <member name="P:OpenLobby.Utility.Network.Client.StopToken">
+            <summary>
+            Token for cancellation
+            </summary>
+        </member>
+        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Int32,System.Threading.CancellationToken,System.Threading.Tasks.Task@)">
+            <summary>
+            Create a listening socket async
+            </summary>
+            <param name="port">The port to listen on</param>
+            <param name="ctk">Token to cancel or disconnect socket</param>
+            <param name="listen">The Listen() task</param>
+        </member>
+        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Create a listening socket
             </summary>
             <param name="port">The port to listen on</param>
+            <param name="ctk">Token to cancel or disconnect socket</param>
         </member>
-        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.IPEndPoint)">
+        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.IPEndPoint,System.Threading.CancellationToken,System.Threading.Tasks.Task@)">
             <summary>
             Create a listening socket
             </summary>
             <param name="localEndpoint">The endpoint to listen on</param>
+            <param name="ctk">Token to cancel or disconnect socket</param>
+            <param name="bind">The Bind() task</param>
         </member>
-        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.IPEndPoint,System.Net.IPEndPoint)">
+        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.IPEndPoint,System.Net.IPEndPoint,System.Threading.CancellationToken,System.Threading.Tasks.Task@)">
             <summary>
             Connects to a remote endpoint
             </summary>
             <param name="localEndpoint">The local endpoint</param>
             <param name="remoteEndpoint">The remote endpoint</param>
+            <param name="ctk">Token to cancel or disconnect socket</param>
+            <param name="connect">The Connect() task</param>
         </member>
-        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.Sockets.Socket)">
+        <member name="M:OpenLobby.Utility.Network.Client.#ctor(System.Net.Sockets.Socket,System.Threading.CancellationToken)">
             <summary>
             Creates a client using a remote socket
             </summary>
             <param name="socket">The remote socket to use</param>
+            <param name="ctk">Token to cancel or disconnect socket</param>
             <exception cref="T:System.ArgumentException">The given socket was not remote</exception>
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.Disconnect">
@@ -57,9 +71,9 @@
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.TryGetTransmission">
             <summary>
-            Tries to get a new transmission
+            Tries to get the transmission
             </summary>
-            <returns>Null if no transmission is available</returns>
+            <returns>Null, complete transmission, or just the header of an incomplete transmission</returns>
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.Send(System.Byte[])">
             <summary>
@@ -75,12 +89,6 @@
         </member>
         <member name="M:OpenLobby.Utility.Network.Client.ToString">
             <returns>Remode endpoint as a string</returns>
-        </member>
-        <member name="M:OpenLobby.Utility.Network.Client.GetHashCode">
-            <summary>Gets the hashcode</summary>
-        </member>
-        <member name="M:OpenLobby.Utility.Network.Client.Equals(System.Object)">
-            <summary> Are the two equal </summary>
         </member>
         <member name="T:OpenLobby.Utility.Network.AddressInUse">
             <summary>

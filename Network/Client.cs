@@ -198,6 +198,8 @@ namespace OpenLobby.Utility.Network
                 count += await Socket.SendAsync(segment, SocketFlags.None, StopToken);
             }
             while (count != payload.Length);
+            Console.WriteLine($"Sent {count} bytes to {RemoteEndpoint}");
+
             return count;
         }
 
@@ -210,6 +212,7 @@ namespace OpenLobby.Utility.Network
                 count += await Socket.ReceiveAsync(segment, SocketFlags.None, StopToken);
             }
             while (count != arr.Length);
+            Console.WriteLine($"Received {count} bytes from {RemoteEndpoint}");
             return count;
         }
 

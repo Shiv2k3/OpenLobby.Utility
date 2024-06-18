@@ -10,3 +10,5 @@ C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\refint\OpenLobby.Utility.dll
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.xml
 C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\ref\OpenLobby.Utility.dll
+C:\Users\Shiv\Desktop\OpenNetwork\Assets\Plugins\OpenLobby\Debug\netstandard2.1\OpenLobby.Utility.pdb
+C:\Users\Shiv\source\repos\OpenLobby.Utility\obj\Debug\netstandard2.1\OpenLobby.Utility.pdb

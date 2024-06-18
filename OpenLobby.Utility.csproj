@@ -21,13 +21,14 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <Optimize>True</Optimize>
 	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-	  <DebugType>embedded</DebugType>
+	  <DebugType>full</DebugType>
 	  <IsPublishable>False</IsPublishable>
+	  <DefineConstants>$(DefineConstants);DEUBG</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-	  <DebugType>embedded</DebugType>
+	  <DebugType>full</DebugType>
 	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 

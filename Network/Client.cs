@@ -185,34 +185,43 @@ namespace OpenLobby.Utility.Network
             }
         }
 
+        private Task<int>? _sendTask;
         /// <summary>
         /// Sends the payload async
         /// </summary>
         /// <param name="payload">The payload to send</param>
         public async Task<int> Send(byte[] payload)
         {
+            if (_sendTask != null) await _sendTask;
             int count = 0;
             do
             {
                 var segment = new ArraySegment<byte>(payload, count, payload.Length - count);
-                count += await Socket.SendAsync(segment, SocketFlags.None, StopToken);
+                count += await (_sendTask = Socket.SendAsync(segment, SocketFlags.None, StopToken).AsTask());
             }
             while (count != payload.Length);
+            
+            _sendTask = null;
             Console.WriteLine($"Sent {count} bytes to {RemoteEndpoint}");
 
             return count;
         }
 
+        private Task<int>? _receiveTask;
         private async Task<int> Receive(byte[] arr)
         {
+            if (_receiveTask != null) await _receiveTask;
             int count = 0;
             do
             {
                 var segment = new ArraySegment<byte>(arr, count, arr.Length - count);
-                count += await Socket.ReceiveAsync(segment, SocketFlags.None, StopToken);
+                count += await (_receiveTask = Socket.ReceiveAsync(segment, SocketFlags.None, StopToken).AsTask());
             }
             while (count != arr.Length);
+
+            _receiveTask = null;
             Console.WriteLine($"Received {count} bytes from {RemoteEndpoint}");
+
             return count;
         }
 
